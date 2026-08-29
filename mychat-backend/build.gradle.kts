@@ -21,7 +21,13 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+	implementation("org.springframework.boot:spring-boot-starter-flyway")
 	implementation("org.springframework.ai:spring-ai-starter-model-openai")
+
+	implementation("org.flywaydb:flyway-database-postgresql")
+
+	implementation("org.postgresql:postgresql")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
