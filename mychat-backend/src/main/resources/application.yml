@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: mychat
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mychat
+    username: postgres
+    password: postgres
+  ai:
+    chat:
+      memory:
+        enabled: true
+        max-messages: 10
+        repository:
+          jdbc:
+            initialize-schema: always
+            platform: postgresql
+    openai:
+      api-key: ${OPENAI_API_KEY}

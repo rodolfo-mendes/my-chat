@@ -3,6 +3,7 @@ package mychat.domain;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +13,15 @@ import java.util.List;
 public class ChatService {
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
-    private final ChatClient.Builder builder;
+    private final ChatClient chatClient;
 
-    public ChatService(ChatRepository chatRepository, MessageRepository messageRepository, ChatClient.Builder builder) {
+    public ChatService(
+            ChatRepository chatRepository,
+            MessageRepository messageRepository,
+            ChatClient.Builder builder) {
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
-        this.builder = builder;
+        this.chatClient = builder.build();
     }
 
     public Message sendMessageAndReceiveResponse(
@@ -33,9 +37,9 @@ public class ChatService {
             java.time.OffsetDateTime.now())
         );
 
-        var chatClient = builder.build();
         var reponseContent = chatClient
             .prompt(userMessageContent)
+            .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
             .call()
             .content();
 
