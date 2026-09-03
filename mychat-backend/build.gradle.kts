@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "4.1.1"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
 group = "mychat"
@@ -27,6 +28,8 @@ dependencies {
 
 	implementation("org.springframework.ai:spring-ai-starter-model-openai")
 	implementation("org.springframework.ai:spring-ai-starter-model-chat-memory-repository-jdbc")
+
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:3.1.0")
 
 	implementation("org.flywaydb:flyway-database-postgresql")
 
