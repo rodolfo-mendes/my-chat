@@ -21,7 +21,9 @@ public class ChatService {
             ChatClient.Builder builder) {
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
-        this.chatClient = builder.build();
+        this.chatClient = builder
+                .defaultSystem("You are a helpful assistant chatbot. Keep your answer short unless the user ask for more details.")
+                .build();
     }
 
     public Message sendMessageAndReceiveResponse(
