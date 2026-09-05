@@ -8,6 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import mychat.domain.ChatService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/chats")
@@ -24,7 +27,7 @@ public class ChatController {
         summary = "Create a new chat with an initial message.",
         description = "Creates a new chat and submits the initial message provided in the request body.")
     @ResponseStatus(HttpStatus.CREATED)
-    public ChatResponse create(
+    public GetChatResponse create(
             @Valid
             @RequestBody
             @Parameter(description = "The request body containing the initial message for the new chat.", required = true)
@@ -36,19 +39,33 @@ public class ChatController {
             .map(message -> new MessageResponse(message.id(), message.content(), message.receivedAt()))
             .toList();
 
-        return new ChatResponse(chat.id(), messages, chat.createdAt());
+        return new GetChatResponse(chat.id(), chat.title(), messages, chat.createdAt());
+    }
+
+    @GetMapping
+    @Operation(
+        summary = "Retrieve a list of all chats.",
+        description = "Retrieves a list of all chats, including their IDs and creation timestamps."
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<ChatListItem> listChats() {
+        return chatService.findAllChats()
+            .stream()
+            .map(chat -> new ChatListItem(chat.id(), chat.title(), chat.createdAt()))
+            .toList();
     }
 
     @GetMapping("{id}")
     @Operation(
         summary = "Retrieve a chat by its ID.",
         description = "Retrieves the chat with the specified ID, including all messages associated with that chat.")
-    public ChatResponse findById(
+    public GetChatResponse findById(
         @NotNull
         @PathVariable
         @Parameter(description = "The ID of the chat to retrieve.", required = true)
         Long id) {
-        var chat = chatService.findChatById(id);
+        var chat = chatService.findChatById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat with id " + id + " not found."));
 
         var messages = chatService
             .findMessagesByChatId(chat.id())
@@ -56,7 +73,7 @@ public class ChatController {
             .map(message -> new MessageResponse(message.id(), message.content(), message.receivedAt()))
             .toList();
 
-        return new ChatResponse(chat.id(), messages, chat.createdAt());
+        return new GetChatResponse(chat.id(), chat.title(), messages, chat.createdAt());
     }
 
     @PostMapping("{id}/messages")

@@ -6,5 +6,6 @@ import java.time.OffsetDateTime;
 
 public record Chat(
         @Id Long id,
+        String title,
         OffsetDateTime createdAt
 ) {}
