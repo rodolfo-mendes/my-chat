@@ -32,7 +32,8 @@ public class ChatController {
             @RequestBody
             @Parameter(description = "The request body containing the initial message for the new chat.", required = true)
             ChatRequest createChatRequest) {
-        var chat = chatService.createChatWithMessage(createChatRequest.message().text());
+        var fakeUserId = 1L;
+        var chat = chatService.createChatWithMessage(fakeUserId, createChatRequest.message().text());
         var messages = chatService
             .findMessagesByChatId(chat.id())
             .stream()

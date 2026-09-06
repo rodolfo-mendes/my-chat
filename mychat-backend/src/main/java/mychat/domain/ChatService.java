@@ -59,7 +59,7 @@ public class ChatService {
         ));
     }
 
-    public Chat createChatWithMessage(@NotBlank String text) {
+    public Chat createChatWithMessage(@NotNull Long userId, @NotBlank String text) {
         String title = defaultChatClient
             .prompt()
             .system("You are a title generator for conversations. For a giving question, generate a single line title for the conversation")
@@ -67,7 +67,7 @@ public class ChatService {
             .call()
             .content();
 
-        var chat = chatRepository.save(new Chat(null, title, java.time.OffsetDateTime.now()));
+        var chat = chatRepository.save(new Chat(null, AggregateReference.to(userId), title, java.time.OffsetDateTime.now()));
         this.sendMessageAndReceiveResponse(chat.id(), text);
         return chat;
     }
