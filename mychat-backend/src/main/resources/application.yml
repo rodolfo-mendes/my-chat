@@ -1,3 +1,9 @@
+mychat:
+  jwt:
+    issuer: https://mychat.local
+    secret: ${JWT_SECRET}
+    expiration: 15m
+
 spring:
   application:
     name: mychat
