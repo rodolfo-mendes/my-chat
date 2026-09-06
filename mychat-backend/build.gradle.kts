@@ -9,6 +9,7 @@ group = "mychat"
 version = "0.0.1-SNAPSHOT"
 
 val springAiVersion = "2.0.0"
+val assertjVersion = "3.27.7"
 
 java {
 	toolchain {
@@ -45,6 +46,7 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
+		mavenBom("org.assertj:assertj-bom:$assertjVersion")
 	}
 }
 

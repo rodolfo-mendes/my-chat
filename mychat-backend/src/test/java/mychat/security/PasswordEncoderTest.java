@@ -3,7 +3,7 @@ package mychat.security;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PasswordEncoderTest {
     private final PasswordEncoder encoder;
@@ -22,9 +22,9 @@ public class PasswordEncoderTest {
         IO.println(first);
         IO.println(second);
 
-        assertNotEquals(first, second);
-        assertTrue(encoder.matches(raw, first));
-        assertTrue(encoder.matches(raw, second));
-        assertFalse(encoder.matches("wrong-password", first));
+        assertThat(first).isNotEqualTo(second);
+        assertThat(encoder.matches(raw, first)).isTrue();
+        assertThat(encoder.matches(raw, second)).isTrue();
+        assertThat(encoder.matches("wrong-password", first)).isFalse();
     }
 }
